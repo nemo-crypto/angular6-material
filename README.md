@@ -1,45 +1,73 @@
-# Angular Material 管理控制台
+# Learn Studio · Angular Material 教学版
 
-基于 Angular 6、Angular Material、RxJS 与 ECharts 的管理后台示例，包含登录、系统管理、节点及服务配置、区块与资产查询。工程名称为 `mdbui`，前端通过业务服务访问配套后端。
+将旧 Angular 6 管理后台重新整理为 **Angular 21 + Material + 独立组件 + Signals** 的可运行教学 Demo。目录名称保留为 angular6-material，但当前工具链不再是 Angular 6；这不是旧业务接口的兼容升级。
 
-## 功能与代码入口
+旧登录、配置管理和业务后端调用已移除，课程内容为独立编写的示例。无需数据库、账户或旧服务，数据只保存在当前浏览器。
 
-| 模块 | 入口 | 说明 |
-|---|---|---|
-| 应用装配 | [app.module.ts](src/app/app.module.ts) | 浏览器、表单、HTTP、布局、图标与加载组件 |
-| 业务路由 | [lazyloader.routes.ts](src/app/auth/lazyloader.routes.ts) | 概览、用户、配置、区块及资产查询 |
-| 业务服务 | `src/app/services/` | 登录、用户、配置与统一请求封装 |
-| 通用组件 | `src/app/modules/` | 对话框、图标和业务组件 |
-| 环境加载 | [environmentLoader.ts](src/environments/environmentLoader.ts) | 启动时读取静态环境配置，失败时使用默认配置 |
+<!-- BEGIN project-discovery -->
+## 项目定位与实践入口
 
-## 环境与启动
+Angular 21 + Material tutorial with standalone components, Signals, reactive forms and LocalStorage. Angular 教学 Demo：课程管理、响应式布局与 Playwright 测试。
 
-当前依赖为 Angular CLI 6、TypeScript 2.7 等历史工具链，未声明 Node engines；应使用已验证的隔离环境，依赖安装结果需自行记录。本次文档检查未安装或升级依赖。
+适合从以下入口阅读实现与接入条件：
 
-在项目目录执行：
+- [页面与表单](src/app/pages/)
+- [Signals 状态管理](src/app/core/course-store.ts)
+- [教学路线](docs/learning-path.md)
+<!-- END project-discovery -->
 
-```bash
+## 快速开始
+
+Node.js 22.12+，推荐 Node 24。
+
+```sh
 npm ci
 npm start
 ```
 
-开发服务器由 [angular.json](angular.json) 配置为 `0.0.0.0:4201`，浏览器访问 `http://localhost:4201`，不是脚手架默认的4200端口。
+打开 http://127.0.0.1:4200 。
 
-## 环境配置与业务依赖
+- **学习总览**：课程数量、完成数量、课时进度和学习清单。
+- **课程管理**：类型化响应式表单、新增、完成、搜索、筛选和确认删除。
+- **搭建路线**：六个工程主题与对应源码位置。
 
-启动时读取 `src/assets/environments/environment.json`，默认配置位于 `src/environments/`。先核对后端地址、登录协议及业务接口，再验证登录和数据页面。此目录不包含相应后端与数据库，页面可打开不代表服务可用。
+课程状态保存在 LocalStorage，刷新后恢复。存储损坏或不可写时显示明确提示；恢复示例前需要确认。所有交互使用真实 Material 组件，没有伪造后端请求。
 
-## 构建与检查
+## 结构
 
-```bash
-npm run build
-npm run build -- --prod
-npm test
-npm run lint
+```text
+src/main.ts                     独立应用启动、懒加载路由
+src/app/app.component.ts         响应式壳与主导航
+src/app/core/course.ts           类型契约、校验、统计纯函数
+src/app/core/course-store.ts     Signals 状态与本地持久化
+src/app/pages/                  总览、课程与教学路线
+src/app/shared/                 Material 确认对话框
+tests/                          领域单元测试、浏览器流程
 ```
 
-构建目录为 `dist/mdbui/`。测试配置使用 Karma/Jasmine，lint 使用 TSLint。`package.json` 中的 `e2e` 脚本需要核实实际 builder 和测试配置后使用，不能仅凭脚本名称判断已具备端到端覆盖。
+## 命令
 
-## 开发与验收
+```sh
+npm test                        # 领域逻辑和存储数据校验
+npm run build                   # 严格模板检查与生产构建
+npm run check                   # 单元测试 + 构建
+npx playwright install chromium
+npm run test:e2e                 # 自动启动独立端口的开发服务
+```
 
-新增页面应在业务路由中注册，服务交互集中在 services，组件样式沿用现有 Material 与主题结构。验收时分别检查环境加载、登录状态、路由切换、接口异常和生产构建。本轮只核对源码、配置和命令存在性，未执行应用运行或测试。
+生产产物在 `dist/learning/browser`。部署为静态 SPA 时，未知路径需回退到 index.html，确保刷新 `/courses` 等路由仍可访问。
+
+## 核心教学点
+
+1. 使用 bootstrapApplication 与独立组件，页面通过 loadComponent 懒加载。
+2. Signals 保存源状态，computed 派生统计和筛选，不手工同步多个计数器。
+3. Reactive Forms 提供控件校验，领域函数再次保护输入边界。
+4. Material 提供表单、按钮、复选框、对话框和反馈，不依赖远程图标字体。
+5. JSON 反序列化后按版本和结构校验，不把任意数据直接断言为课程数组。
+6. 桌面侧栏与移动顶部导航共用路由；测试验证 360/768/1440px 布局。
+
+## 边界
+
+LocalStorage 是单浏览器演示存储，不适合敏感数据或多用户共享。最多 100 节课程，每节 1–600 分钟，名称 1–60 字符。当前没有用户账号、跨标签同步或后端 API；浏览器禁用存储时仅保持内存状态。
+
+文档：[架构与技术取舍](docs/architecture.md) · [六节实践课](docs/learning-path.md)。旧源码不在当前目录中归档，但可能仍存在 Git 历史里；本次没有改写历史或推送。

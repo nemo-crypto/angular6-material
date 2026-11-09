@@ -1,0 +1,1 @@
+{"extends":"../tsconfig.json","compilerOptions":{"module":"NodeNext","moduleResolution":"NodeNext","outDir":"../.test-build","rootDir":"../src/app/core","noEmit":false,"types":[]},"include":["../src/app/core/course.ts"]}
