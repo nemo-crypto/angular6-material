@@ -70,4 +70,4 @@ npm run test:e2e                 # 自动启动独立端口的开发服务
 
 LocalStorage 是单浏览器演示存储，不适合敏感数据或多用户共享。最多 100 节课程，每节 1–600 分钟，名称 1–60 字符。当前没有用户账号、跨标签同步或后端 API；浏览器禁用存储时仅保持内存状态。
 
-文档：[架构与技术取舍](docs/architecture.md) · [六节实践课](docs/learning-path.md)。旧源码不在当前目录中归档，但可能仍存在 Git 历史里；本次没有改写历史或推送。
+文档：[架构与技术取舍](docs/architecture.md) · [六节实践课](docs/learning-path.md)。旧源码不在当前目录中归档，但可能仍存在 Git 历史里；教学版发布未改写旧 Git 历史。
