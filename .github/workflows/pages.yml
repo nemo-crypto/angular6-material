@@ -1,0 +1,49 @@
+name: Publish demo to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: github-pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm run build -- --base-href=/angular6-material/
+      - name: Add entry points for public routes
+        run: |
+          cd dist/learning/browser
+          for route in overview courses guide; do
+            mkdir -p "$route"
+            cp index.html "$route/index.html"
+          done
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: dist/learning/browser
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

@@ -1,5 +1,7 @@
 # Learn Studio · Angular Material 教学版
 
+**[在线体验 · 打开 Learn Studio](https://nemo-crypto.github.io/angular6-material/)**
+
 将旧 Angular 6 管理后台重新整理为 **Angular 21 + Material + 独立组件 + Signals** 的可运行教学 Demo。目录名称保留为 angular6-material，但当前工具链不再是 Angular 6；这不是旧业务接口的兼容升级。
 
 旧登录、配置管理和业务后端调用已移除，课程内容为独立编写的示例。无需数据库、账户或旧服务，数据只保存在当前浏览器。
